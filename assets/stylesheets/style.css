@@ -1,0 +1,87 @@
+@font-face {
+  font-family: 'Dela Gothic';
+  src: url('../fonts/Dela_Gothic_One/DelaGothicOne-Regular.ttf');
+}
+
+@font-face {
+  font-family: 'Ultra';
+  src: url('../fonts/Ultra-Regular.ttf');
+}
+
+:root,
+body {
+  margin: 0;
+  font-size: 1.5rem;
+}
+
+* {
+  font-family: 'Dela Gothic', 'Ultra', sans-serif;
+}
+
+section#scores {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  padding: 1rem 3rem;
+  justify-content: space-between;
+  position: relative;
+}
+
+section#scores > * {
+  display: grid;
+  justify-content: center;
+  align-items: center;
+}
+
+section#scores #current-scores {
+  display: flex;
+  gap: 1rem;
+}
+
+section#choices {
+  max-width: 80ch;
+  padding: 0 3rem;
+  margin: 5rem auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 2rem;
+}
+
+section#choices button.choice-button {
+  flex: auto;
+  padding: 1rem 2rem;
+  border-radius: 1rem;
+  transition: 
+    background-color 0.2s,
+    color 0.2s;
+
+}
+section#choices button#rock.choice-button:hover {
+  background-color: darkgray;
+  color: white;
+}
+
+section#choices button#paper.choice-button:hover {
+  background-color: beige;
+  color: black;
+}
+
+section#choices button#scissors.choice-button:hover {
+  background-color: lightblue;
+  color: black;
+}
+
+section#choices button#rock.choice-button:focus {
+  background-color: black;
+  color: white;
+}
+
+section#choices button#paper.choice-button:focus {
+  background-color: white;
+  color: black;
+}
+
+section#choices button#scissors.choice-button:focus {
+  background-color: navy;
+  color: white;
+}

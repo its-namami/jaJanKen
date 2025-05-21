@@ -1,3 +1,8 @@
+// TO-DO: Capture dynamically all action buttons, add HTML of button to press, and if pressing
+// that button, then choose that thing, as if you were to click it.
+// Obviously create clicking event too, and first and foremost.
+// Change the rounds to unlimited until score of someone is 5 – that's when it ends.
+
 let round;
 let userScore;
 let computerScore;

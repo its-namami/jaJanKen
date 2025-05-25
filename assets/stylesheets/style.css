@@ -54,8 +54,12 @@ section#choices button.choice-button {
   transition: 
     background-color 0.2s,
     color 0.2s;
-
 }
+
+section#choices button.choice-button:hover {
+  cursor: pointer;
+}
+
 section#choices button#rock.choice-button:hover {
   background-color: darkgray;
   color: white;

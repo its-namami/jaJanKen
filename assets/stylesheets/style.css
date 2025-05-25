@@ -8,6 +8,12 @@
   src: url('../fonts/Ultra-Regular.ttf');
 }
 
+:root {
+  --old-paper-color: #B99566;
+  --dark-old-paper-color: #8C714D;
+  --pastel-pink-color: #FFD1DC;
+}
+
 :root,
 body {
   margin: 0;
@@ -24,6 +30,7 @@ section#scores {
   padding: 1rem 3rem;
   justify-content: space-between;
   position: relative;
+  text-align: center;
 }
 
 section#scores > * {
@@ -45,6 +52,7 @@ section#choices {
   justify-content: center;
   align-items: center;
   gap: 2rem;
+  position: relative;
 }
 
 section#choices button.choice-button {
@@ -56,13 +64,21 @@ section#choices button.choice-button {
     color 0.2s;
 }
 
+section#choices button#surrender.choice-button {
+  position: absolute;
+  left: 1rem;
+  bottom: -120%;
+  padding: 0 .5rem;
+  border-radius: .75rem;
+}
+
 section#choices button.choice-button:hover {
   cursor: pointer;
 }
 
 section#choices button#rock.choice-button:hover {
-  background-color: darkgray;
-  color: white;
+  background-color: #ccc;
+  color: black;
 }
 
 section#choices button#paper.choice-button:hover {
@@ -75,13 +91,17 @@ section#choices button#scissors.choice-button:hover {
   color: black;
 }
 
+section#choices button#surrender.choice-button:hover {
+  background-color: var(--pastel-pink-color);
+}
+
 section#choices button#rock.choice-button:focus {
-  background-color: black;
-  color: white;
+  background-color: darkgray;
+  color: black;
 }
 
 section#choices button#paper.choice-button:focus {
-  background-color: white;
+  background-color: var(--old-paper-color);
   color: black;
 }
 
@@ -89,3 +109,27 @@ section#choices button#scissors.choice-button:focus {
   background-color: navy;
   color: white;
 }
+
+section#choices button#surrender.choice-button:focus {
+  background-color: darkred;
+}
+
+section#choices button#rock.choice-button:active {
+  background-color: white;
+  color: black;
+}
+
+section#choices button#paper.choice-button:active {
+  background-color: white;
+  color: var(--dark-old-paper-color);
+}
+
+section#choices button#scissors.choice-button:active {
+  background-color: white;
+  color: navy;
+}
+
+section#choices button#surrender.choice-button:active {
+  background-color: red;
+}
+

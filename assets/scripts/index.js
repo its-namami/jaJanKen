@@ -36,45 +36,45 @@ const getStringComputerChoice = function getPredeterminedChoiceStringBasedOnRand
 const getRockOutcome = function (computerChoice) {
   switch (computerChoice) {
     case 'ROCK':
-      return 'Tie';
+      return 'TIE';
     case 'PAPER':
-      return 'Lose';
+      return 'LOSE';
     case 'SCISSORS':
-      return 'Win';
+      return 'WIN';
   }
 }
 
 const getPaperOutcome = function (computerChoice) {
   switch (computerChoice) {
     case 'ROCK':
-      return 'Win';
+      return 'WIN';
     case 'PAPER':
-      return 'Tie';
+      return 'TIE';
     case 'SCISSORS':
-      return 'Lose';
+      return 'LOSE';
   }
 }
 
 const getScissorsOutcome = function (computerChoice) {
   switch (computerChoice) {
     case 'ROCK':
-      return 'Lose';
+      return 'LOSE';
     case 'PAPER':
-      return 'Win';
+      return 'WIN';
     case 'SCISSORS':
-      return 'Tie';
+      return 'TIE';
   }
 }
 
 const renderScore = function incrementScoreUpdateUI(outcome) {
   switch (outcome) {
-    case 'Win':
+    case 'WIN':
       userScore++;
       break;
-    case 'Lose':
+    case 'LOSE':
       computerScore++;
       break;
-    case 'Tie':
+    case 'TIE':
       break;
     default:
        throw new Error(`Unexpected outcome: ${outcome}`);

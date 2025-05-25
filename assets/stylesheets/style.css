@@ -143,3 +143,6 @@ section#game-result h3 {
   font-size: 1.5rem;
 }
 
+.hidden {
+  display: none !important;
+}

@@ -161,7 +161,7 @@ const gameOutcomeDisplay = function addTextsAndCleanUpChoicesSection(surrendered
 const gameOver = function hideChoicesSectionDisplayGameOverSection(surrendered) {
   gameOutcomeDisplay(surrendered);
   choicesSection.classList.add('hidden');
-  restart(choicesSection);
+  //restart(choicesSection);
 }
 
 const resetScores = function setScoresToZeroAndUpdateUIScores() {

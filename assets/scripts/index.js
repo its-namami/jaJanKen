@@ -5,24 +5,30 @@
 //
 // What is needed:
 // add background to the score, if you won this round, green – lost – red, tie – yellow
+//
+// Extra thing to add:
+// Logs (history) of your current game, battles (rounds) and each outcome;
+// Logs of previous games, too
 
 let userScore = 0;
 let computerScore = 0;
 const elementUserScore = document.querySelector('#player-score');
 const elementComputerScore = document.querySelector('#computer-score');
+const choicesSection = document.querySelector('section#choices');
+const gameBtnChoices = document.querySelectorAll('button.choice-button');
 
 const getStringComputerChoice = function getPredeterminedChoiceStringBasedOnRandomThree(computerChoice) {
   let stringComputerChoice;
 
   switch (computerChoice) {
     case 0:
-      stringComputerChoice = "ROCK";
+      stringComputerChoice = 'ROCK';
       break;
     case 1:
-      stringComputerChoice = "PAPER";
+      stringComputerChoice = 'PAPER';
       break;
     case 2:
-      stringComputerChoice = "SCISSORS";
+      stringComputerChoice = 'SCISSORS';
       break;
     default:
       throw new Error(`Unexpected computer choice value: ${computerChoice}`);
@@ -65,8 +71,8 @@ const getScissorsOutcome = function (computerChoice) {
 }
 
 const updateUIScore = function () {
-  elementUserScore.innerText = userScore;
-  elementComputerScore.innerText = computerScore;
+  elementUserScore.textContent = userScore;
+  elementComputerScore.textContent = computerScore;
 }
 
 const updateScore = function updateScoreVariablesAndUI (outcome) {
@@ -86,7 +92,10 @@ const updateScore = function updateScoreVariablesAndUI (outcome) {
   updateUIScore();
 }
 
-const getOutcome = function getOutcomeAndUpdateScore (userChoice, computerChoice) {
+const getOutcome = function getOutcomeUserVsComputer (userChoice, computerChoice) {
+  userChoice = userChoice.toUpperCase();
+  computerChoice = computerChoice.toUpperCase();
+
   let outcome;
 
   switch (userChoice) {
@@ -106,19 +115,81 @@ const getOutcome = function getOutcomeAndUpdateScore (userChoice, computerChoice
   updateScore(outcome);
 }
 
-const getRoundResult = function (userChoice, computerChoice) {
-  userChoice = userChoice.toUpperCase();
-  computerChoice = computerChoice.toUpperCase();
-  let outcome = getOutcome(userChoice, computerChoice);
-}
-
 const round = function playersChoices(userChoice) {
   const randomThree = Math.floor(Math.random() * 3);
   const computerChoice = getStringComputerChoice(randomThree);
-  getRoundResult(userChoice, computerChoice);
+  getOutcome(userChoice, computerChoice);
 };
 
-const showResult = function showGameResult(surrendered) {
+const removeNodes = function removeNodesAndReturnThem (selectedNodes, isIterable = true) {
+  let btnsCopy;
+  if (isIterable) {
+    btnsCopy = [...selectedNodes];
+    selectedNodes.forEach(node => node.remove());
+  } else {
+    btnsCopy = selectedNodes.cloneNode(true);
+    selectedNodes.remove();
+  }
+  return btnsCopy;
+}
+
+const getGameOutcomeMessage = function getConditionalOutcomeMessage(surrendered) {
+  const gitLink = '//github.com/its-namami/jajanken';
+  const gitText = `ゲームを楽しんでいただけたら、私の<a href='${gitLink}' target='_blank' rel='noopener noreferrer'>GitHubリポジトリ</a>にスターを残していただけると嬉しいです！`;
+  let won;
+  let tie;
+  let heading;
+  let mainText;
+
+  if (userScore > computerScore) {
+    won = true;
+  } else {
+    won = false;
+  }
+
+  if (userScore == computerScore) {
+    tie = true;
+  } else {
+    tie = false;
+  }
+
+  if (surrendered) {
+    heading = '降参しました';
+    mainText = '敵の強大な力の前に降参することを決意しました。';
+  } else if (tie) {
+    heading = "引き分けです";
+    mainText = 'ゲームは引き分けに終わりました。よく頑張りました！';
+  } else if (won) {
+    heading = 'あなたの勝ちです';
+    mainText = 'おめでとうございます！コンピューターに勝利しました。';
+  } else if (!won) {
+    heading = 'あなたの負けです';
+    mainText = '今回はコンピューターの勝ちです。次のラウンドはもっと頑張りましょう！';
+  }
+
+  return {
+    heading,
+    mainText,
+    gitText
+  }
+}
+
+const showResult = function showGameResult(surrendered, removeNode) {
+  const outcomeTexts = getGameOutcomeMessage(surrendered);
+  const outcomeSection = document.createElement('section');
+  outcomeSection.id = 'game-result';
+  choicesSection.parentElement.insertBefore(outcomeSection, choicesSection);
+  const outcomeHeading = document.createElement('h3');
+  outcomeHeading.textContent = outcomeTexts.heading;
+  outcomeSection.appendChild(outcomeHeading);
+  const outcomeMainText = document.createElement('p');
+  outcomeMainText.textContent = outcomeTexts.mainText;
+  outcomeSection.appendChild(outcomeMainText);
+  const outcomeGitText = document.createElement('p');
+  outcomeGitText.innerHTML = outcomeTexts.gitText; // there's a link inside
+  outcomeSection.appendChild(outcomeGitText);
+  const removedChoiceBtns = removeNodes(choicesSection, false);
+
   // TO-DO:
   // show game over screen, maybe in form of a <dialog>
   // if willingly surrendered, then a bit different one
@@ -126,8 +197,7 @@ const showResult = function showGameResult(surrendered) {
 }
 
 const gameOver = function removeBtnsDisplayFinalScoreDialog(surrendered = false) {
-  removeChoiceBtns();
-  showResult(surrendered);
+  showResult(surrendered, gameBtnChoices);
 }
 
 const surrender = function usrSurrender() {
@@ -138,7 +208,7 @@ const surrender = function usrSurrender() {
   // And then simply continue with the normal restart button
 }
 
-const restart = function resetVariablesRestartGame () {
+const restart = function resetVariablesRestartGame (removedNode) {
   // TO-DO
 }
 
@@ -150,12 +220,10 @@ const game = function playGameMaxScoreX(userChoice, maxScore = 5) {
   if (userScore >= maxScore || computerScore >= maxScore) gameOver();
 }
 
-const gameBtnChoices = document.querySelectorAll('button.choice-button');
-
 gameBtnChoices.forEach(choiceButton => {
-  choiceButton.addEventListener('click', event => {
+  choiceButton.addEventListener('click', () => {
     // Button ID name is logical and will be directly interpreted as user input
-    let thisBtnID = event.target.attributes.id.nodeValue;
+    let thisBtnID = choiceButton.getAttribute('id');
     game(thisBtnID);
   });
 });

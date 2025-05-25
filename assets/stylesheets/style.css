@@ -133,3 +133,13 @@ section#choices button#surrender.choice-button:active {
   background-color: red;
 }
 
+section#game-result {
+  padding: 0 3rem;
+  font-size: 1rem;
+}
+
+section#game-result h3 {
+  font-weight: normal;
+  font-size: 1.5rem;
+}
+

@@ -159,3 +159,19 @@ section#game-result h3 {
 .round-tie {
   background-color: #FFEE99;
 }
+
+.game-won h3 {
+  color: darkgreen;
+}
+
+.game-lost h3 {
+  color: darkred;
+}
+
+.game-tie h3 {
+  color: var(--old-paper-color);
+}
+
+.game-surrender h3 {
+  color: navy;
+}

@@ -6,12 +6,53 @@
 // Add Images so you can visually see what Computer and what you Played
 // Add ARIA-labels
 // Condense Rock, Paper and Scissors outcome
+//
+// Here's how Janken typically goes:
+//
+// "最初はグー" (Saisho wa gū!): "First is rock!" (Everyone makes a rock hand)
+// "じゃんけんぽん!" (Janken pon!): This is the signal to throw your hand shape (rock, paper, or scissors).
+// If it's a tie: "あいこでしょ!" (Aiko desho!): "It's a tie, isn't it?" (Everyone throws again immediately on "sho!")
+// Repeat "あいこでしょ!" until there's a winner.
+// So, to "restart" Janken, you just go back to "最初はグー!" and begin the round again.
+//
+// If you win (勝った！ - Katta!):
+// The most common and enthusiastic thing to say when you win, especially in a casual game like Janken, is:
+//
+// 勝った！ (Katta!) - "I won!" / "Won!"
+// This is the past tense of the verb 勝つ (katsu) meaning "to win." It's direct and expresses joy.
+// You might also hear or say:
+//
+// やった！ (Yatta!) - "Yay!" / "Alright!" / "I did it!"
+// This is a general exclamation of accomplishment and excitement, often used in conjunction with Katta!, like やった！勝った！ (Yatta! Katta!).
+// 私の勝ち！ (Watashi no kachi!) - "My win!" / "It's my victory!"
+// 私の (watashi no) means "my" and 勝ち (kachi) means "win" or "victory." This is a bit more formal but still perfectly natural.
+// If you lose (負けた！ - Maketa!):
+// The most common way to acknowledge a loss is:
+//
+// 負けた！ (Maketa!) - "I lost!" / "Lost!"
+// This is the past tense of the verb 負ける (makeru) meaning "to lose."
+// You might also say, depending on your feeling about the loss:
+//
+// 残念！ (Zannen!) - "Too bad!" / "What a shame!" / "Darn!"
+// This expresses a feeling of disappointment or regret.
+// くそっ！ (Kuso!) - "Damn it!" / "Crap!"
+// This is a more informal and slightly stronger exclamation of frustration (use with caution depending on who you're playing with!).
+// 悔しい！ (Kuyashii!) - "Frustrating!" / "Annoying!" (because of a loss)
+// This expresses a feeling of vexation or chagrin at having lost.
+//
+
+
+
+
+
 let userScore = 0;
 let computerScore = 0;
 const elementUserScore = document.querySelector('#player-score');
 const elementComputerScore = document.querySelector('#computer-score');
 const choicesSection = document.querySelector('section#choices');
 const gameBtnChoices = document.querySelectorAll('button.choice-button');
+const scoresSection = document.querySelector('section#scores');
+const roundOutcomeCssClasses = ['round-win', 'round-lose', 'round-tie'];
 
 const getStringComputerChoice = function getPredeterminedChoiceStringBasedOnRandomThree(computerChoice) {
   let stringComputerChoice;
@@ -67,14 +108,19 @@ const getScissorsOutcome = function (computerChoice) {
 }
 
 const renderScore = function incrementScoreUpdateUI(outcome) {
+  scoresSection.classList.remove(...roundOutcomeCssClasses);
+
   switch (outcome) {
     case 'WIN':
+      scoresSection.classList.add('round-win');
       userScore++;
       break;
     case 'LOSE':
+      scoresSection.classList.add('round-lose');
       computerScore++;
       break;
     case 'TIE':
+      scoresSection.classList.add('round-tie');
       break;
     default:
        throw new Error(`Unexpected outcome: ${outcome}`);
@@ -116,6 +162,7 @@ const round = function playersChoices(userChoice) {
 const getGameOutcomeMessage = function getConditionalOutcomeMessage(surrendered) {
   const gitLink = '//github.com/its-namami/jajanken';
   const gitText = `ゲームを楽しんでいただけたら、私の<a href='${gitLink}' target='_blank' rel='noopener noreferrer'>GitHubリポジトリ</a>にスターを残していただけると嬉しいです！`;
+  // make this object later {currentGame} or whatever where it is all automatically calculated.
   const won = userScore > computerScore;
   const tie = userScore === computerScore;
   let heading;
@@ -142,10 +189,23 @@ const getGameOutcomeMessage = function getConditionalOutcomeMessage(surrendered)
   };
 }
 
-const gameOutcomeDisplay = function addTextsAndCleanUpChoicesSection(surrendered) {
+const createDisplayGameOver = function createGameOverSectionWithGameResultAsClass(surrendered) {
+  const won = userScore > computerScore;
+  const tie = userScore === computerScore;
   const outcomeTexts = getGameOutcomeMessage(surrendered);
   const outcomeSection = document.createElement('section');
   outcomeSection.id = 'game-result';
+
+  if (surrendered) {
+    outcomeSection.classList.add('game-surrender');
+  } else if (tie) {
+      outcomeSection.classList.add('game-tie');
+  } else if (won) {
+      outcomeSection.classList.add('game-won');
+  } else {
+      outcomeSection.classList.add('game-lost');
+  }
+
   choicesSection.parentElement.insertBefore(outcomeSection, choicesSection);
   const outcomeHeading = document.createElement('h3');
   outcomeHeading.textContent = outcomeTexts.heading;
@@ -156,12 +216,24 @@ const gameOutcomeDisplay = function addTextsAndCleanUpChoicesSection(surrendered
   const outcomeGitText = document.createElement('p');
   outcomeGitText.innerHTML = outcomeTexts.gitText; // because there's a link inside with <a> tag
   outcomeSection.appendChild(outcomeGitText);
+  const restartButton = document.createElement('button');
+  restartButton.textContent = 'ニューゲーム';
+  outcomeSection.appendChild(restartButton);
+  choicesSection.classList.add('hidden');
+  return restartButton;
 }
 
-const gameOver = function hideChoicesSectionDisplayGameOverSection(surrendered) {
-  gameOutcomeDisplay(surrendered);
-  choicesSection.classList.add('hidden');
-  //restart(choicesSection);
+const gameOver = function removeScoresColorDisplayGameOutcome(surrendered) {
+  const restartButton = createDisplayGameOver(surrendered);
+  const restartGame = function restartOnClick() { restart(choicesSection)};
+  restartButton.addEventListener('click', restartGame);
+  scoresSection.classList.remove(...roundOutcomeCssClasses);
+}
+
+const resetNodes = function showButtonsAgainAndResultGameResult(node) {
+  node.classList.remove('hidden');
+  const resultSection = document.querySelector('section#game-result');
+  if (resultSection) resultSection.remove();
 }
 
 const resetScores = function setScoresToZeroAndUpdateUIScores() {
@@ -173,11 +245,7 @@ const resetScores = function setScoresToZeroAndUpdateUIScores() {
 
 const restart = function resetVariablesRecreateNodeRestartGame(node) {
   resetScores();
-  node.classList.remove('hidden');
-  const resultSection = document.querySelector('section#game-result');
-
-  if (resultSection) resultSection.remove();
-
+  resetNodes(node);
   // TO-DO:
   // make restart a new custom event
 }

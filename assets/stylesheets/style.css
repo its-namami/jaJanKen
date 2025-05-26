@@ -25,6 +25,7 @@ body {
 }
 
 section#scores {
+  transition: background-color 0.2s;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   padding: 1rem 3rem;
@@ -47,7 +48,7 @@ section#scores #current-scores {
 section#choices {
   max-width: 80ch;
   padding: 0 3rem;
-  margin: 5rem auto;
+  margin: 0 auto;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -145,4 +146,16 @@ section#game-result h3 {
 
 .hidden {
   display: none !important;
+}
+
+.round-win {
+  background-color: #AAFF99;
+}
+
+.round-lose {
+  background-color: #FF9999;
+}
+
+.round-tie {
+  background-color: #FFEE99;
 }

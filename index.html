@@ -7,19 +7,27 @@
   </head>
   <body>
     <section id="scores">
-      <span class="score-name">あなた</span>
+      <span id="player-name">あなた</span>
       <div id="current-scores">
-        <div id="player-score">
-          0
-          <!-- add the num of score here -->
-        </div>
+        <span id="player-score">
+          零
+        </span>
         <span>-</span>
-        <div id="computer-score">
-          0
-          <!-- add the num of score here -->
-        </div>
+        <span id="computer-score">
+          零
+        </span>
       </div>
-      <span class="score-name">コンピューター</span>
+      <span id="opponent-name">コンピューター</span>
+    </section>
+    <section id="reactions">
+      <div id="player-reaction">
+        <img id="player-reaction-image"/>
+        <img id="player-move-image"/>
+      </div>
+      <div id="opponent-reaction">
+        <img id="opponent-reaction-image"/>
+        <img id="opponent-move-image"/>
+      </div>
     </section>
     <section id="choices">
       <button class="choice-button" id="rock">グー</button>

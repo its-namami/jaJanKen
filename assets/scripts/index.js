@@ -53,6 +53,38 @@ const choicesSection = document.querySelector('section#choices');
 const gameBtnChoices = document.querySelectorAll('button.choice-button');
 const scoresSection = document.querySelector('section#scores');
 const roundOutcomeCssClasses = ['round-win', 'round-lose', 'round-tie'];
+const JANKEN_MOVES_IMAGES_DIR = 'assets/media/img/moveImg/'
+const JANKEN_REACTION_IMAGES_DIR = 'assets/media/img/reactionImg/'
+const playerReactionImageBlock = document.querySelector('#player-reaction');
+const playerMoveImageBlock = document.querySelector('#player-reaction-image');
+const computerReactionImageBlock = document.querySelector('#computer-reaction');
+
+const getScoreNumKanji = function getKanjiBasedOnNumberUpToFive(number) {
+  switch (number) {
+    case 0:
+      return "零";
+      break;
+    case 1:
+      return "壱";
+      break;
+    case 2:
+      return "弐";
+      break;
+    case 3:
+      return "参";
+      break;
+    case 4:
+      return "肆";
+      break;
+    case 5:
+      return "伍";
+      break;
+  }
+
+  return number;
+}
+
+
 
 const getStringComputerChoice = function getPredeterminedChoiceStringBasedOnRandomThree(computerChoice) {
   let stringComputerChoice;
@@ -126,8 +158,8 @@ const renderScore = function incrementScoreUpdateUI(outcome) {
        throw new Error(`Unexpected outcome: ${outcome}`);
   }
 
-  elementUserScore.textContent = userScore;
-  elementComputerScore.textContent = computerScore;
+  elementUserScore.textContent = getScoreNumKanji(userScore);
+  elementComputerScore.textContent = getScoreNumKanji(computerScore);
 }
 
 const determineOutcome = function returnOutcomeOfTheRound(userChoice, computerChoice) {
@@ -239,8 +271,8 @@ const resetNodes = function showButtonsAgainAndResultGameResult(node) {
 const resetScores = function setScoresToZeroAndUpdateUIScores() {
   userScore = 0;
   computerScore = 0;
-  elementUserScore.textContent = 0;
-  elementComputerScore.textContent = 0;
+  elementUserScore.textContent = getScoreNumKanji(0);
+  elementComputerScore.textContent = getScoreNumKanji(0);
 }
 
 const restart = function resetVariablesRecreateNodeRestartGame(node) {

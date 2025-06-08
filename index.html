@@ -1,40 +1,44 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <meta charset="utf-8">
+    <meta charset='utf-8'>
     <title>ジャジャン拳</title>
-    <link rel="stylesheet" href="assets/stylesheets/style.css">
+    <link rel='stylesheet' href='assets/stylesheets/style.css'>
   </head>
   <body>
-    <section id="scores">
-      <span id="player-name">あなた</span>
-      <div id="current-scores">
-        <span id="player-score">
+    <section id='players'>
+      <div id='player'>
+        <div class='reactions' id='player-reaction'>
+          <img draggable='false' class='reaction-image'/>
+          <img draggable='false' class='move-image'/>
+        </div>
+        <span id='player-name'>あなた</span>
+      </div>
+      <div id='current-scores'>
+        <span id='player-score'>
           零
         </span>
         <span>-</span>
-        <span id="computer-score">
+        <span id='opponent-score'>
           零
         </span>
       </div>
-      <span id="opponent-name">コンピューター</span>
-    </section>
-    <section id="reactions">
-      <div id="player-reaction">
-        <img id="player-reaction-image"/>
-        <img id="player-move-image"/>
-      </div>
-      <div id="opponent-reaction">
-        <img id="opponent-reaction-image"/>
-        <img id="opponent-move-image"/>
+      <div id='opponent'>
+        <div class='reactions' id='opponent-reaction'>
+          <img draggable='false' class='reaction-image'/>
+          <img draggable='false' class='move-image'/>
+        </div>
+        <span id='opponent-name'>相手</span>
       </div>
     </section>
-    <section id="choices">
-      <button class="choice-button" id="rock">グー</button>
-      <button class="choice-button" id="scissors">チョキ</button>
-      <button class="choice-button" id="paper">パー</button>
-      <button class="choice-button" id="surrender">降参</button>
+    <section id='reactions'>
     </section>
-  <script src="assets/scripts/index.js"></script>
+    <section id='choices'>
+      <button class='choice-button' id='rock'>グー</button>
+      <button class='choice-button' id='scissors'>チョキ</button>
+      <button class='choice-button' id='paper'>パー</button>
+      <button class='choice-button' id='surrender'>降参</button>
+    </section>
+  <script src='assets/scripts/index.js'></script>
   </body>
 </html>

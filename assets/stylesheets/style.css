@@ -24,7 +24,7 @@ body {
   font-family: 'Dela Gothic', 'Ultra', sans-serif;
 }
 
-section#scores {
+section#players {
   transition: background-color 0.2s;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -34,15 +34,19 @@ section#scores {
   text-align: center;
 }
 
-section#scores > * {
+section#players > * {
   display: grid;
   justify-content: center;
   align-items: center;
 }
 
-section#scores #current-scores {
+section#players #current-scores {
   display: flex;
   gap: 1rem;
+}
+
+#current-scores {
+  align-self: flex-start;
 }
 
 section#choices {
@@ -176,13 +180,29 @@ section#game-result h3 {
   color: navy;
 }
 
-section#reactions {
-  max-width: 80ch;
-  padding: 0 3rem;
-  margin: 0 auto;
-  display: flex;
-  justify-content: space-evenly;
-  align-items: center;
-  max-height: 33dvh;
+div.reactions {
+  position: relative;
 }
 
+img.reaction-image,
+img.move-image {
+  border-radius: 15%;
+  width: 100%;
+  user-select: none;
+}
+
+img.move-image {
+  position: absolute;
+    transform: scale(0.5);
+    top: 0;
+    bottom: 0;
+    margin: auto 0;
+}
+
+#player img.move-image {
+  right: -75%;
+}
+
+#opponent img.move-image {
+  left: -75%;
+}

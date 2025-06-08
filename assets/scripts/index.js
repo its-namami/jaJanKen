@@ -3,7 +3,7 @@
 // Extra thing to add:
 // Logs (history) of your current game, battles (rounds) and each outcome;
 // Logs of previous games, too
-// Add Images so you can visually see what Computer and what you Played
+// Add Images so you can visually see what opponent and what you Played
 // Add ARIA-labels
 // Condense Rock, Paper and Scissors outcome
 //
@@ -39,25 +39,64 @@
 // This is a more informal and slightly stronger exclamation of frustration (use with caution depending on who you're playing with!).
 // 悔しい！ (Kuyashii!) - "Frustrating!" / "Annoying!" (because of a loss)
 // This expresses a feeling of vexation or chagrin at having lost.
-//
+// 
+// TO-DO:
+// Add Timer (5s max for move);
+// Make Mobile-Compatible
+// Find a better place for buttons (perhaps absolute?)
+// Add Stats - counter of how many MATCHES were won and lost - and display - for each player!
 
 
 
 
 
 let userScore = 0;
-let computerScore = 0;
+let opponentScore = 0;
 const elementUserScore = document.querySelector('#player-score');
-const elementComputerScore = document.querySelector('#computer-score');
+const elementopponentScore = document.querySelector('#opponent-score');
 const choicesSection = document.querySelector('section#choices');
 const gameBtnChoices = document.querySelectorAll('button.choice-button');
-const scoresSection = document.querySelector('section#scores');
+const playersSection = document.querySelector('section#players');
 const roundOutcomeCssClasses = ['round-win', 'round-lose', 'round-tie'];
-const JANKEN_MOVES_IMAGES_DIR = 'assets/media/img/moveImg/'
-const JANKEN_REACTION_IMAGES_DIR = 'assets/media/img/reactionImg/'
-const playerReactionImageBlock = document.querySelector('#player-reaction');
-const playerMoveImageBlock = document.querySelector('#player-reaction-image');
-const computerReactionImageBlock = document.querySelector('#computer-reaction');
+const JANKEN_MOVES_IMAGES_DIR = 'assets/media/img/moveImg'
+const JANKEN_REACTION_IMAGES_DIR = 'assets/media/img/reactionImg'
+const playerReactionImage = document.querySelector('#player .reaction-image');
+const playerMoveImage = document.querySelector('#player .move-image');
+const opponentReactionImage = document.querySelector('#opponent .reaction-image');
+const opponentMoveImage = document.querySelector('#opponent .move-image');
+
+const setDefaultImg = function setDefaultPlyaerAndOpponentReactionAndMoveImg() {
+  playerMoveImage.removeAttribute('src');
+  opponentMoveImage.removeAttribute('src');
+  playerReactionImage.setAttribute('src', `${JANKEN_REACTION_IMAGES_DIR}/default.jpg`);
+  opponentReactionImage.setAttribute('src', `${JANKEN_REACTION_IMAGES_DIR}/default.jpg`);
+  // TO-DO: Reaction Img Default
+}
+
+const setReactionImg = function setPlayerAndOpponentReactionImgs(playerOutcome) {
+  let opponentOutcome;
+  playerOutcome = playerOutcome.toLowerCase();
+
+  if (playerOutcome === 'win') {
+    opponentOutcome = 'lose';
+  } else if (playerOutcome === 'lose') {
+    opponentOutcome = 'win';
+  } else if (playerOutcome === 'tie') {
+    opponentOutcome = 'tie'
+  } else {
+    throw new Error(`Unexpected Player Outcome: ${playerOutcome}`);
+  }
+
+  playerReactionImage.setAttribute('src', `${JANKEN_REACTION_IMAGES_DIR}/${playerOutcome}.jpg`);
+  opponentReactionImage.setAttribute('src', `${JANKEN_REACTION_IMAGES_DIR}/${opponentOutcome}.jpg`);
+}
+
+const setMoveImg = function setPlayerAndOpponentMoveImgs(movePlayer, moveOpponent) {
+  movePlayer = movePlayer.toLowerCase();
+  moveOpponent = moveOpponent.toLowerCase();
+  playerMoveImage.setAttribute('src', `${JANKEN_MOVES_IMAGES_DIR}/${movePlayer}.jpg`);
+  opponentMoveImage.setAttribute('src', `${JANKEN_MOVES_IMAGES_DIR}/${moveOpponent}.jpg`);
+}
 
 const getScoreNumKanji = function getKanjiBasedOnNumberUpToFive(number) {
   switch (number) {
@@ -86,28 +125,28 @@ const getScoreNumKanji = function getKanjiBasedOnNumberUpToFive(number) {
 
 
 
-const getStringComputerChoice = function getPredeterminedChoiceStringBasedOnRandomThree(computerChoice) {
-  let stringComputerChoice;
+const getStringOpponentChoice = function getPredeterminedChoiceStringBasedOnRandomThree(opponentChoice) {
+  let stringopponentChoice;
 
-  switch (computerChoice) {
+  switch (opponentChoice) {
     case 0:
-      stringComputerChoice = 'ROCK';
+      stringopponentChoice = 'ROCK';
       break;
     case 1:
-      stringComputerChoice = 'PAPER';
+      stringopponentChoice = 'PAPER';
       break;
     case 2:
-      stringComputerChoice = 'SCISSORS';
+      stringopponentChoice = 'SCISSORS';
       break;
     default:
-      throw new Error(`Unexpected computer choice value: ${computerChoice}`);
+      throw new Error(`Unexpected opponent choice value: ${opponentChoice}`);
   }
 
-  return stringComputerChoice;
+  return stringopponentChoice;
 }
 
-const getRockOutcome = function (computerChoice) {
-  switch (computerChoice) {
+const getRockOutcome = function (opponentChoice) {
+  switch (opponentChoice) {
     case 'ROCK':
       return 'TIE';
     case 'PAPER':
@@ -117,8 +156,8 @@ const getRockOutcome = function (computerChoice) {
   }
 }
 
-const getPaperOutcome = function (computerChoice) {
-  switch (computerChoice) {
+const getPaperOutcome = function (opponentChoice) {
+  switch (opponentChoice) {
     case 'ROCK':
       return 'WIN';
     case 'PAPER':
@@ -128,8 +167,8 @@ const getPaperOutcome = function (computerChoice) {
   }
 }
 
-const getScissorsOutcome = function (computerChoice) {
-  switch (computerChoice) {
+const getScissorsOutcome = function (opponentChoice) {
+  switch (opponentChoice) {
     case 'ROCK':
       return 'LOSE';
     case 'PAPER':
@@ -140,40 +179,40 @@ const getScissorsOutcome = function (computerChoice) {
 }
 
 const renderScore = function incrementScoreUpdateUI(outcome) {
-  scoresSection.classList.remove(...roundOutcomeCssClasses);
+  playersSection.classList.remove(...roundOutcomeCssClasses);
 
   switch (outcome) {
     case 'WIN':
-      scoresSection.classList.add('round-win');
+      playersSection.classList.add('round-win');
       userScore++;
       break;
     case 'LOSE':
-      scoresSection.classList.add('round-lose');
-      computerScore++;
+      playersSection.classList.add('round-lose');
+      opponentScore++;
       break;
     case 'TIE':
-      scoresSection.classList.add('round-tie');
+      playersSection.classList.add('round-tie');
       break;
     default:
        throw new Error(`Unexpected outcome: ${outcome}`);
   }
 
   elementUserScore.textContent = getScoreNumKanji(userScore);
-  elementComputerScore.textContent = getScoreNumKanji(computerScore);
+  elementopponentScore.textContent = getScoreNumKanji(opponentScore);
 }
 
-const determineOutcome = function returnOutcomeOfTheRound(userChoice, computerChoice) {
+const determineOutcome = function returnOutcomeOfTheRound(userChoice, opponentChoice) {
   let outcome;
 
   switch (userChoice) {
     case 'ROCK':
-      outcome = getRockOutcome(computerChoice);
+      outcome = getRockOutcome(opponentChoice);
       break;
     case 'PAPER':
-      outcome = getPaperOutcome(computerChoice)
+      outcome = getPaperOutcome(opponentChoice)
       break;
     case 'SCISSORS':
-      outcome = getScissorsOutcome(computerChoice);
+      outcome = getScissorsOutcome(opponentChoice);
       break;
     default:
        throw new Error(`Unexpected user choice: ${userChoice}`)  ;
@@ -184,10 +223,12 @@ const determineOutcome = function returnOutcomeOfTheRound(userChoice, computerCh
 
 const round = function playersChoices(userChoice) {
   const randomThree = Math.floor(Math.random() * 3);
-  const computerChoice = getStringComputerChoice(randomThree);
-  const outcome = determineOutcome(userChoice, computerChoice);
+  const opponentChoice = getStringOpponentChoice(randomThree);
+  const outcome = determineOutcome(userChoice, opponentChoice);
   renderScore(outcome);
-  console.log(`あなた: ${userChoice} | コンピューター: ${computerChoice} => ${outcome}`);
+  setMoveImg(userChoice, opponentChoice);
+  setReactionImg(outcome);
+  console.log(`あなた: ${userChoice} | 相手: ${opponentChoice} => ${outcome}`);
   return outcome;
 };
 
@@ -195,8 +236,8 @@ const getGameOutcomeMessage = function getConditionalOutcomeMessage(surrendered)
   const gitLink = '//github.com/its-namami/jajanken';
   const gitText = `ゲームを楽しんでいただけたら、私の<a href='${gitLink}' target='_blank' rel='noopener noreferrer'>GitHubリポジトリ</a>にスターを残していただけると嬉しいです！`;
   // make this object later {currentGame} or whatever where it is all automatically calculated.
-  const won = userScore > computerScore;
-  const tie = userScore === computerScore;
+  const won = userScore > opponentScore;
+  const tie = userScore === opponentScore;
   let heading;
   let mainText;
 
@@ -222,8 +263,8 @@ const getGameOutcomeMessage = function getConditionalOutcomeMessage(surrendered)
 }
 
 const createDisplayGameOver = function createGameOverSectionWithGameResultAsClass(surrendered) {
-  const won = userScore > computerScore;
-  const tie = userScore === computerScore;
+  const won = userScore > opponentScore;
+  const tie = userScore === opponentScore;
   const outcomeTexts = getGameOutcomeMessage(surrendered);
   const outcomeSection = document.createElement('section');
   outcomeSection.id = 'game-result';
@@ -259,20 +300,21 @@ const gameOver = function removeScoresColorDisplayGameOutcome(surrendered) {
   const restartButton = createDisplayGameOver(surrendered);
   const restartGame = function restartOnClick() { restart(choicesSection)};
   restartButton.addEventListener('click', restartGame);
-  scoresSection.classList.remove(...roundOutcomeCssClasses);
+  playersSection.classList.remove(...roundOutcomeCssClasses);
 }
 
 const resetNodes = function showButtonsAgainAndResultGameResult(node) {
   node.classList.remove('hidden');
   const resultSection = document.querySelector('section#game-result');
+  setDefaultImg();
   if (resultSection) resultSection.remove();
 }
 
 const resetScores = function setScoresToZeroAndUpdateUIScores() {
   userScore = 0;
-  computerScore = 0;
+  opponentScore = 0;
   elementUserScore.textContent = getScoreNumKanji(0);
-  elementComputerScore.textContent = getScoreNumKanji(0);
+  elementopponentScore.textContent = getScoreNumKanji(0);
 }
 
 const restart = function resetVariablesRecreateNodeRestartGame(node) {
@@ -287,8 +329,10 @@ const game = function playGameUntilOneReachesMaxScore(userChoice, maxScore) {
 
   round(userChoice);
 
-  if (userScore >= maxScore || computerScore >= maxScore) gameOver(false);
+  if (userScore >= maxScore || opponentScore >= maxScore) gameOver(false);
 }
+
+setDefaultImg();
 
 gameBtnChoices.forEach(choiceButton => {
   choiceButton.addEventListener('click', () => {

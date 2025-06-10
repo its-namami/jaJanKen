@@ -64,9 +64,9 @@ const playerReactionImage = document.querySelector('#player .reaction-image');
 const playerMoveImage = document.querySelector('#player .move-image');
 const opponentReactionImage = document.querySelector('#opponent .reaction-image');
 const opponentMoveImage = document.querySelector('#opponent .move-image');
-const gameLogs = {
+const gameStats = {
   scores: [
-    // my idea - logsObject.scores[0] ==> { playerScore: 3, opponentScore: 5 }
+    // my idea - statsObject.scores[0] ==> { playerScore: 3, opponentScore: 5 }
     // { 
       // playerScore: 3,
       // opponentScore: 5,
@@ -79,19 +79,17 @@ const gameLogs = {
   }
 };
 
-const updateLogs = function logCurrentScoreAndWinPlayerOrOpponent(outcome) { // will get its value from global constant
-  gameLogs.scores.push({playerScore, opponentScore});
+const updateStats = function statsCurrentScoreAndWinPlayerOrOpponent(outcome) { // will get its value from global constant
+  gameStats.scores.push({playerScore, opponentScore});
 
   switch (outcome) {
     case 'WIN':
-      gameLogs.wins.player++;
+      gameStats.wins.player++;
       break;
     case 'LOSE':
-      gameLogs.wins.opponent++;
+      gameStats.wins.opponent++;
       break;
   }
-
-  console.dir(gameLogs);
 }
 
 const setDefaultImg = function setDefaultPlyaerAndOpponentReactionAndMoveImg() {
@@ -291,6 +289,10 @@ const getGameOutcomeMessage = function getConditionalOutcomeMessage(surrendered)
   };
 }
 
+const displayStats = function () {
+  
+}
+
 const createDisplayGameOver = function createGameOverSectionWithGameResultAsClass(surrendered) {
   const won = playerScore > opponentScore;
   const tie = playerScore === opponentScore;
@@ -326,7 +328,7 @@ const createDisplayGameOver = function createGameOverSectionWithGameResultAsClas
 }
 
 const gameOver = function removeScoresColorDisplayGameOutcome(surrendered, outcome) {
-  updateLogs(outcome);
+  updateStats(outcome);
   const restartButton = createDisplayGameOver(surrendered);
   const restartGame = function restartOnClick() { restart(choicesSection)};
   restartButton.addEventListener('click', restartGame);

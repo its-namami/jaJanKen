@@ -50,7 +50,7 @@
 
 
 
-let userScore = 0;
+let playerScore = 0;
 let opponentScore = 0;
 const elementUserScore = document.querySelector('#player-score');
 const elementopponentScore = document.querySelector('#opponent-score');
@@ -64,6 +64,35 @@ const playerReactionImage = document.querySelector('#player .reaction-image');
 const playerMoveImage = document.querySelector('#player .move-image');
 const opponentReactionImage = document.querySelector('#opponent .reaction-image');
 const opponentMoveImage = document.querySelector('#opponent .move-image');
+const gameLogs = {
+  scores: [
+    // my idea - logsObject.scores[0] ==> { playerScore: 3, opponentScore: 5 }
+    // { 
+      // playerScore: 3,
+      // opponentScore: 5,
+    // },
+    // ...
+  ],
+  wins: {
+    player: 0,
+    opponent: 0,
+  }
+};
+
+const updateLogs = function logCurrentScoreAndWinPlayerOrOpponent(outcome) { // will get its value from global constant
+  gameLogs.scores.push({playerScore, opponentScore});
+
+  switch (outcome) {
+    case 'WIN':
+      gameLogs.wins.player++;
+      break;
+    case 'LOSE':
+      gameLogs.wins.opponent++;
+      break;
+  }
+
+  console.dir(gameLogs);
+}
 
 const setDefaultImg = function setDefaultPlyaerAndOpponentReactionAndMoveImg() {
   playerMoveImage.removeAttribute('src');
@@ -184,7 +213,7 @@ const renderScore = function incrementScoreUpdateUI(outcome) {
   switch (outcome) {
     case 'WIN':
       playersSection.classList.add('round-win');
-      userScore++;
+      playerScore++;
       break;
     case 'LOSE':
       playersSection.classList.add('round-lose');
@@ -197,7 +226,7 @@ const renderScore = function incrementScoreUpdateUI(outcome) {
        throw new Error(`Unexpected outcome: ${outcome}`);
   }
 
-  elementUserScore.textContent = getScoreNumKanji(userScore);
+  elementUserScore.textContent = getScoreNumKanji(playerScore);
   elementopponentScore.textContent = getScoreNumKanji(opponentScore);
 }
 
@@ -236,8 +265,8 @@ const getGameOutcomeMessage = function getConditionalOutcomeMessage(surrendered)
   const gitLink = '//github.com/its-namami/jajanken';
   const gitText = `ゲームを楽しんでいただけたら、私の<a href='${gitLink}' target='_blank' rel='noopener noreferrer'>GitHubリポジトリ</a>にスターを残していただけると嬉しいです！`;
   // make this object later {currentGame} or whatever where it is all automatically calculated.
-  const won = userScore > opponentScore;
-  const tie = userScore === opponentScore;
+  const won = playerScore > opponentScore;
+  const tie = playerScore === opponentScore;
   let heading;
   let mainText;
 
@@ -263,8 +292,8 @@ const getGameOutcomeMessage = function getConditionalOutcomeMessage(surrendered)
 }
 
 const createDisplayGameOver = function createGameOverSectionWithGameResultAsClass(surrendered) {
-  const won = userScore > opponentScore;
-  const tie = userScore === opponentScore;
+  const won = playerScore > opponentScore;
+  const tie = playerScore === opponentScore;
   const outcomeTexts = getGameOutcomeMessage(surrendered);
   const outcomeSection = document.createElement('section');
   outcomeSection.id = 'game-result';
@@ -296,7 +325,8 @@ const createDisplayGameOver = function createGameOverSectionWithGameResultAsClas
   return restartButton;
 }
 
-const gameOver = function removeScoresColorDisplayGameOutcome(surrendered) {
+const gameOver = function removeScoresColorDisplayGameOutcome(surrendered, outcome) {
+  updateLogs(outcome);
   const restartButton = createDisplayGameOver(surrendered);
   const restartGame = function restartOnClick() { restart(choicesSection)};
   restartButton.addEventListener('click', restartGame);
@@ -311,7 +341,7 @@ const resetNodes = function showButtonsAgainAndResultGameResult(node) {
 }
 
 const resetScores = function setScoresToZeroAndUpdateUIScores() {
-  userScore = 0;
+  playerScore = 0;
   opponentScore = 0;
   elementUserScore.textContent = getScoreNumKanji(0);
   elementopponentScore.textContent = getScoreNumKanji(0);
@@ -327,9 +357,9 @@ const restart = function resetVariablesRecreateNodeRestartGame(node) {
 const game = function playGameUntilOneReachesMaxScore(userChoice, maxScore) {
   if (userChoice === 'SURRENDER') return gameOver(true);
 
-  round(userChoice);
+  const roundOutcome = round(userChoice);
 
-  if (userScore >= maxScore || opponentScore >= maxScore) gameOver(false);
+  if (playerScore >= maxScore || opponentScore >= maxScore) gameOver(false, roundOutcome);
 }
 
 setDefaultImg();

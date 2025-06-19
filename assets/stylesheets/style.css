@@ -23,6 +23,7 @@
   --dark-old-paper-color: #8C714D;
   --pastel-pink-color: #FFD1DC;
   /* color-palette */
+  --picton-blue: #02A9EA;
   --fluorescent-cyan: #34F6F2FF;
   --alice-blue: #EEF8FFFF;
   --jet: #2A2B2AFF;
@@ -267,12 +268,12 @@ div#github-profile-image::before {
 }
 
 button#match-history-switch {
-  background-color: white;
+  background-color: var(--picton-blue);
   margin-left: auto;
   border-radius: .3rem;
   width: 4rem;
   height: 2rem;
-  border: 1px solid darkred;
+  border: 1px solid var(--true-blue);
   position: relative;
   overflow: hidden;
 }
@@ -362,4 +363,7 @@ div#github-profile-image:hover img {
 
 .icons-font {
   font-family: 'Nerd Font Icon';
+}
+#choices .icons-font {
+  font-size: 2em;
 }

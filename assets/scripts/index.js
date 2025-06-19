@@ -41,6 +41,8 @@
 // This expresses a feeling of vexation or chagrin at having lost.
 // 
 // TO-DO:
+// Navigation, with menu-list, on the left home page, right next to it choose mode, on the right choose language and my icon (on github).
+// Footer, with my copyright and github profile
 // Add Timer (5s max for move);
 // Make Mobile-Compatible
 // Find a better place for buttons (perhaps absolute?)
@@ -65,14 +67,7 @@ const playerMoveImage = document.querySelector('#player .move-image');
 const opponentReactionImage = document.querySelector('#opponent .reaction-image');
 const opponentMoveImage = document.querySelector('#opponent .move-image');
 const gameStats = {
-  scores: [
-    // my idea - statsObject.scores[0] ==> { playerScore: 3, opponentScore: 5 }
-    // { 
-      // playerScore: 3,
-      // opponentScore: 5,
-    // },
-    // ...
-  ],
+  scores: [],
   wins: {
     player: 0,
     opponent: 0,
@@ -172,7 +167,7 @@ const getStringOpponentChoice = function getPredeterminedChoiceStringBasedOnRand
   return stringopponentChoice;
 }
 
-const getRockOutcome = function (opponentChoice) {
+const rock = function getRockOutcome(opponentChoice) {
   switch (opponentChoice) {
     case 'ROCK':
       return 'TIE';
@@ -183,7 +178,7 @@ const getRockOutcome = function (opponentChoice) {
   }
 }
 
-const getPaperOutcome = function (opponentChoice) {
+const paper = function getPaperOutcome(opponentChoice) {
   switch (opponentChoice) {
     case 'ROCK':
       return 'WIN';
@@ -194,7 +189,7 @@ const getPaperOutcome = function (opponentChoice) {
   }
 }
 
-const getScissorsOutcome = function (opponentChoice) {
+const scissors = function getScissorsOutcome(opponentChoice) {
   switch (opponentChoice) {
     case 'ROCK':
       return 'LOSE';
@@ -233,13 +228,13 @@ const determineOutcome = function returnOutcomeOfTheRound(userChoice, opponentCh
 
   switch (userChoice) {
     case 'ROCK':
-      outcome = getRockOutcome(opponentChoice);
+      outcome = rock(opponentChoice);
       break;
     case 'PAPER':
-      outcome = getPaperOutcome(opponentChoice)
+      outcome = paper(opponentChoice)
       break;
     case 'SCISSORS':
-      outcome = getScissorsOutcome(opponentChoice);
+      outcome = scissors(opponentChoice);
       break;
     default:
        throw new Error(`Unexpected user choice: ${userChoice}`)  ;
@@ -287,10 +282,6 @@ const getGameOutcomeMessage = function getConditionalOutcomeMessage(surrendered)
     mainText,
     gitText
   };
-}
-
-const displayStats = function () {
-  
 }
 
 const createDisplayGameOver = function createGameOverSectionWithGameResultAsClass(surrendered) {

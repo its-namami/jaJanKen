@@ -1,44 +1,66 @@
 <!DOCTYPE html>
-<html>
+<html lang="jp">
   <head>
     <meta charset='utf-8'>
     <title>ジャジャン拳</title>
     <link rel='stylesheet' href='assets/stylesheets/style.css'>
   </head>
   <body>
-    <section id='players'>
-      <div id='player'>
-        <div class='reactions' id='player-reaction'>
-          <img draggable='false' class='reaction-image'/>
-          <img draggable='false' class='move-image'/>
+    <header>
+      <nav>
+        <div id="home-logo">
+          <a href="index.html"><img src="assets/media/img/logo/logo.png"/></a>
         </div>
-        <span id='player-name'>あなた</span>
-      </div>
-      <div id='current-scores'>
-        <span id='player-score'>
-          零
-        </span>
-        <span>-</span>
-        <span id='opponent-score'>
-          零
-        </span>
-      </div>
-      <div id='opponent'>
-        <div class='reactions' id='opponent-reaction'>
-          <img draggable='false' class='reaction-image'/>
-          <img draggable='false' class='move-image'/>
+        <div class="dropdown" id="game-modes">
+          <span>ゲームモード選択</span>
+          <div class="dropdown-content">
+            <a href="#">カウントダウン・ラッシュ・モード</a>
+            <a href="#">基本モード</a>
+          </div>
         </div>
-        <span id='opponent-name'>相手</span>
-      </div>
-    </section>
-    <section id='reactions'>
-    </section>
-    <section id='choices'>
-      <button class='choice-button' id='rock'>グー</button>
-      <button class='choice-button' id='scissors'>チョキ</button>
-      <button class='choice-button' id='paper'>パー</button>
-      <button class='choice-button' id='surrender'>降参</button>
-    </section>
+        <button id="match-history-switch">
+          <span>履歴表示</span>
+        </button>
+        <div id="github-profile-image">
+          <a href="https://github.com/its-namami" target="_blank" rel="noopener noreferrer"><img src="https://avatars.githubusercontent.com/u/164639260"/></a>
+        </div>
+      </nav>
+    </header>
+    <main>
+      <section id='players'>
+        <div id='player'>
+          <div class='reactions' id='player-reaction'>
+            <img draggable='false' class='reaction-image'/>
+            <img draggable='false' class='move-image'/>
+          </div>
+          <span id='player-name'>あなた</span>
+        </div>
+        <div id='current-scores'>
+          <span id='player-score'>
+            零
+          </span>
+          <span>-</span>
+          <span id='opponent-score'>
+            零
+          </span>
+        </div>
+        <div id='opponent'>
+          <div class='reactions' id='opponent-reaction'>
+            <img draggable='false' class='reaction-image'/>
+            <img draggable='false' class='move-image'/>
+          </div>
+          <span id='opponent-name'>相手</span>
+        </div>
+      </section>
+      <section id='reactions'>
+      </section>
+      <section id='choices'>
+        <button class='choice-button' id='rock'>グー</button>
+        <button class='choice-button' id='scissors'>チョキ</button>
+        <button class='choice-button' id='paper'>パー</button>
+        <button class='choice-button' id='surrender'>降参</button>
+      </section>
+    </main>
   <script src='assets/scripts/index.js'></script>
   </body>
 </html>

@@ -24,6 +24,17 @@ body {
   font-family: 'Dela Gothic', 'Ultra', sans-serif;
 }
 
+header {
+  position: relative;
+  padding-bottom: 3rem;
+  z-index: 2;
+}
+
+main {
+  position: relative;
+  z-index: 1;
+}
+
 section#players {
   transition: background-color 0.2s;
   display: grid;
@@ -205,4 +216,126 @@ img.move-image {
 
 #opponent img.move-image {
   left: -75%;
+}
+
+nav {
+  display: flex;
+  align-items: center;
+  height: 3rem;
+  font-size: 1rem;
+  gap: 1rem;
+  position: fixed;
+  width: 100%;
+  box-shadow: 0 4px 2px 0px lightgreen;
+  background-color: #f0fff0;
+}
+
+div#home-logo,
+div#github-profile-image {
+  flex: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: black;
+  position: relative;
+  cursor: pointer;
+}
+
+div#home-logo::before,
+div#github-profile-image::before {
+  color: white;
+  position: absolute;
+  display: none;
+}
+
+button#match-history-switch {
+  background-color: white;
+  margin-left: auto;
+  border-radius: .3rem;
+  width: 4rem;
+  height: 2rem;
+  border: 1px solid darkred;
+  position: relative;
+  overflow: hidden;
+}
+
+button#match-history-switch span{
+  display: inline-block;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 120%;
+  transition: font-size 0.1125s;
+}
+
+button#match-history-switch:hover span{
+  font-size: 1.5em;
+}
+
+div#home-logo::before {
+  content: 'ホーム';
+}
+
+div#github-profile-image::before {
+  content: 'ギット';
+}
+
+div#home-logo:hover::before,
+div#github-profile-image:hover::before {
+  display: block;
+}
+
+div#home-logo,
+div#home-logo a,
+div#github-profile-image,
+div#github-profile-image a,
+div#home-logo img,
+div#home-logo a img,
+div#github-profile-image img,
+div#github-profile-image img a {
+  height: 100%;
+}
+
+div#home-logo img,
+div#github-profile-image img {
+  object-fit: contain;
+  width: 100%;
+  opacity: 1;
+  transition: opacity 0.2s;
+}
+
+div#home-logo:hover img,
+div#github-profile-image:hover img {
+  opacity: 0.3;
+}
+
+.dropdown {
+  position: relative;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: white;
+  border: 1px solid black;
+  border-radius: .1em;
+  z-index: 2;
+  font-size: .8em;
+  padding: .5em;
+}
+
+.dropdown-content a {
+  color: black;
+  text-decoration: none;
+}
+
+.dropdown-content a:hover {
+  text-decoration: underline;
+}
+
+.dropdown:hover .dropdown-content {
+  display: flex;
+  flex-direction: column;
+  gap: .33em;
 }

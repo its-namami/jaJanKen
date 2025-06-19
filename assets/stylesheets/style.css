@@ -15,7 +15,7 @@
 
 @font-face {
   font-family: 'Nerd Font Icon';
-  src: url('../fonts/NerdFontsSymbolsOnly/SymbolsNerdFont-Regular.ttf');
+  src: url('../fonts/NerdFontsSymbolsOnly/SymbolsNerdFontMono-Regular.ttf');
 }
 
 :root {
@@ -31,6 +31,9 @@
   --atomic-tangerine: #FF934FFF;
   --true-blue: #3066BE;
   --yellow-green: #9BC53D;
+  --razzmatazz: #F61067;
+  --rebecca-purple: #5E239D;
+  --pakistan-green: #104911;
 }
 
 :root,
@@ -207,7 +210,28 @@ div.reactions {
   position: relative;
 }
 
+div.reaction-icon {
+  border: 1px solid var(--jet);
+  user-select: none;
+  -webkit-user-select: none;
+  border-radius: 50%;
+  background-color: white;
+  position: absolute;
+  top: 0;
+  padding: .3rem;
+  font-family: 'Nerd Font Icon';
+}
+
+div#player-reaction-icon {
+  left: 0;
+}
+
+div#opponent-reaction-icon {
+  right: 0;
+}
+
 img.reaction-image,
+img.opponent-image,
 img.move-image {
   border-radius: 15%;
   width: 100%;
@@ -364,6 +388,20 @@ div#github-profile-image:hover img {
 .icons-font {
   font-family: 'Nerd Font Icon';
 }
+
 #choices .icons-font {
   font-size: 2em;
 }
+
+.icon-win {
+  color: var(--pakistan-green);
+}
+
+.icon-tie {
+  color: var(--rebecca-purple);
+}
+
+.icon-lose {
+  color: var(--razzmatazz);
+}
+

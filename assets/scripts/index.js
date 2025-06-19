@@ -1,3 +1,4 @@
+"use strict";
 // TO-DO:
 // add background to the score, if you won this round, green – lost – red, tie – yellow
 // Extra thing to add:
@@ -47,6 +48,9 @@
 // Make Mobile-Compatible
 // Find a better place for buttons (perhaps absolute?)
 // Add Stats - counter of how many MATCHES were won and lost - and display - for each player!
+// NEW IDEA GAME MODE:
+// Make it that who answers the fastest, even if they chose the losing move,
+// that they have a chance to win the round depending on how much faster than the opponent
 
 
 
@@ -61,11 +65,49 @@ const gameBtnChoices = document.querySelectorAll('button.choice-button');
 const playersSection = document.querySelector('section#players');
 const roundOutcomeCssClasses = ['round-win', 'round-lose', 'round-tie'];
 const JANKEN_MOVES_IMAGES_DIR = 'assets/media/img/moveImg'
-const JANKEN_REACTION_IMAGES_DIR = 'assets/media/img/reactionImg'
-const playerReactionImage = document.querySelector('#player .reaction-image');
 const playerMoveImage = document.querySelector('#player .move-image');
-const opponentReactionImage = document.querySelector('#opponent .reaction-image');
 const opponentMoveImage = document.querySelector('#opponent .move-image');
+const playerReactionIcon = document.querySelector('#player-reaction-icon');
+const opponentReactionIcon = document.querySelector('#opponent-reaction-icon');
+
+const iconStatusClasses = [
+  'icon-win',
+  'icon-tie',
+  'icon-lose'
+];
+
+const winReactionEmojis = [
+  '',
+  '',
+  '',
+  '',
+  '',
+  '',
+  '',
+];
+
+const tieReactionEmojis = [
+  '',
+  '',
+  '',
+  '',
+  '',
+  '',
+  '',
+  '',
+]
+
+const loseReactionEmojis = [
+  '',
+  '',
+  '',
+  '',
+  '',
+  '',
+]
+
+
+
 const gameStats = {
   scores: [],
   wins: {
@@ -87,30 +129,51 @@ const updateStats = function statsCurrentScoreAndWinPlayerOrOpponent(outcome) { 
   }
 }
 
-const setDefaultImg = function setDefaultPlyaerAndOpponentReactionAndMoveImg() {
-  playerMoveImage.removeAttribute('src');
-  opponentMoveImage.removeAttribute('src');
-  playerReactionImage.setAttribute('src', `${JANKEN_REACTION_IMAGES_DIR}/default.jpg`);
-  opponentReactionImage.setAttribute('src', `${JANKEN_REACTION_IMAGES_DIR}/default.jpg`);
-  // TO-DO: Reaction Img Default
+const removeClasses = function removeMultipleClassesFromElement([...classes], element) {
+  classes.forEach(cls => {
+    element.classList.remove(cls);
+  });
 }
 
-const setReactionImg = function setPlayerAndOpponentReactionImgs(playerOutcome) {
-  let opponentOutcome;
-  playerOutcome = playerOutcome.toLowerCase();
+const setEmojisClasses = function setPlayersEmojiClassesBasedOnOutcome(outcome) {
+  removeClasses(iconStatusClasses, playerReactionIcon);
+  removeClasses(iconStatusClasses, opponentReactionIcon);
 
-  if (playerOutcome === 'win') {
-    opponentOutcome = 'lose';
-  } else if (playerOutcome === 'lose') {
-    opponentOutcome = 'win';
-  } else if (playerOutcome === 'tie') {
-    opponentOutcome = 'tie'
+  if (outcome === 'WIN') {
+    playerReactionIcon.classList.add('icon-win');
+    opponentReactionIcon.classList.add('icon-lose');
+  } else if (outcome === 'TIE') {
+    playerReactionIcon.classList.add('icon-tie');
+    opponentReactionIcon.classList.add('icon-tie');
+  } else if (outcome === 'LOSE') {
+    playerReactionIcon.classList.add('icon-lose');
+    opponentReactionIcon.classList.add('icon-win');
+  }
+}
+
+const setRandomEmoji = function setRandomEmojiAsTextContent(block, emojiArray) {
+  block.textContent = emojiArray[Math.floor(Math.random() * emojiArray.length)];
+}
+
+const updateEmoji = function getEachPlayersOutcomeAndSetTextContentOfEmojiBlock (playerOutcome) {
+  if (playerOutcome === 'WIN') {
+    setRandomEmoji(playerReactionIcon, winReactionEmojis);
+    setRandomEmoji(opponentReactionIcon, loseReactionEmojis);
+  } else if (playerOutcome === 'TIE') {
+    setRandomEmoji(playerReactionIcon, tieReactionEmojis);
+    setRandomEmoji(opponentReactionIcon, tieReactionEmojis);
+  } else if (playerOutcome === 'LOSE') {
+    setRandomEmoji(playerReactionIcon, loseReactionEmojis);
+    setRandomEmoji(opponentReactionIcon, winReactionEmojis);
   } else {
     throw new Error(`Unexpected Player Outcome: ${playerOutcome}`);
   }
+  setEmojisClasses(playerOutcome);
+}
 
-  playerReactionImage.setAttribute('src', `${JANKEN_REACTION_IMAGES_DIR}/${playerOutcome}.jpg`);
-  opponentReactionImage.setAttribute('src', `${JANKEN_REACTION_IMAGES_DIR}/${opponentOutcome}.jpg`);
+const setDefaultImg = function setDefaultPlyaerAndOpponentReactionAndMoveImg() {
+  playerMoveImage.removeAttribute('src');
+  opponentMoveImage.removeAttribute('src');
 }
 
 const setMoveImg = function setPlayerAndOpponentMoveImgs(movePlayer, moveOpponent) {
@@ -249,7 +312,7 @@ const round = function playersChoices(userChoice) {
   const outcome = determineOutcome(userChoice, opponentChoice);
   renderScore(outcome);
   setMoveImg(userChoice, opponentChoice);
-  setReactionImg(outcome);
+  updateEmoji(outcome);
   console.log(`あなた: ${userChoice} | 相手: ${opponentChoice} => ${outcome}`);
   return outcome;
 };
@@ -271,10 +334,10 @@ const getGameOutcomeMessage = function getConditionalOutcomeMessage(surrendered)
     mainText = 'ゲームは引き分けに終わりました。よく頑張りました！';
   } else if (won) {
     heading = 'あなたの勝ちです';
-    mainText = 'おめでとうございます！コンピューターに勝利しました。';
+    mainText = 'おめでとうございます！相手に勝利しました。';
   } else {
     heading = 'あなたの負けです';
-    mainText = '今回はコンピューターの勝ちです。次のラウンドはもっと頑張りましょう！';
+    mainText = '今回は相手の勝ちです。次のラウンドはもっと頑張りましょう！';
   }
 
   return {
@@ -304,6 +367,7 @@ const createDisplayGameOver = function createGameOverSectionWithGameResultAsClas
   choicesSection.parentElement.insertBefore(outcomeSection, choicesSection);
   const outcomeHeading = document.createElement('h3');
   outcomeHeading.textContent = outcomeTexts.heading;
+  outcomeHeading.classList.add('gothic-font');
   outcomeSection.appendChild(outcomeHeading);
   const outcomeMainText = document.createElement('p');
   outcomeMainText.textContent = outcomeTexts.mainText;
@@ -326,11 +390,19 @@ const gameOver = function removeScoresColorDisplayGameOutcome(surrendered, outco
   playersSection.classList.remove(...roundOutcomeCssClasses);
 }
 
+const removeReactionEmojis = function removeReactionEmojiClassAndEmptyTextContent() {
+  playerReactionIcon.textContent = '';
+  playerReactionIcon.classList.remove('reaction-icon');
+  opponentReactionIcon.textContent = '';
+  opponentReactionIcon.classList.remove('reaction-icon');
+}
+
 const resetNodes = function showButtonsAgainAndResultGameResult(node) {
   node.classList.remove('hidden');
   const resultSection = document.querySelector('section#game-result');
   setDefaultImg();
   if (resultSection) resultSection.remove();
+  removeReactionEmojis();
 }
 
 const resetScores = function setScoresToZeroAndUpdateUIScores() {
@@ -357,11 +429,18 @@ const game = function playGameUntilOneReachesMaxScore(userChoice, maxScore) {
 
 setDefaultImg();
 
+const reactionIconClassAdd = function addReactionClassForPlayerAndOpponent() {
+  playerReactionIcon.classList.add('reaction-icon');
+  opponentReactionIcon.classList.add('reaction-icon');
+}
+
 gameBtnChoices.forEach(choiceButton => {
   choiceButton.addEventListener('click', () => {
     // Button ID name is directly interpreted as user input
+    // since it's not up to the user anyway
     const thisBtnID = choiceButton.getAttribute('id');
     const uppercaseBtnID = thisBtnID.toUpperCase();
+    reactionIconClassAdd();
     game(uppercaseBtnID, 5);
   });
 });

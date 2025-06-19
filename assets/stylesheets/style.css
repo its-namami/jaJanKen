@@ -219,7 +219,6 @@ div.reaction-icon {
   position: absolute;
   top: 0;
   padding: .3rem;
-  font-family: 'Nerd Font Icon';
 }
 
 div#player-reaction-icon {
@@ -236,6 +235,7 @@ img.move-image {
   border-radius: 15%;
   width: 100%;
   user-select: none;
+  -webkit-user-select: none;
 }
 
 img.move-image {
@@ -270,7 +270,8 @@ div#github-profile-image {
   border-radius: 50%;
   overflow: hidden;
   border: 1px solid black;
-  height: 80%;
+  height: 60%;
+  margin-right: 1em;
 }
 
 div#home-logo,
@@ -322,9 +323,9 @@ div#home-logo::before {
 
 div#github-profile-image::before {
   content: 'ギット';
-  width: 140%;
+  width: 190%;
   text-align: center;
-  font-size: .9em;
+  font-size: .7em;
 }
 
 div#home-logo:hover::before,
@@ -385,12 +386,13 @@ div#github-profile-image:hover img {
   gap: .33em;
 }
 
-.icons-font {
+.icons-font,
+.icons-font * {
   font-family: 'Nerd Font Icon';
 }
 
 #choices .icons-font {
-  font-size: 2em;
+  font-size: 3em;
 }
 
 .icon-win {
@@ -405,3 +407,49 @@ div#github-profile-image:hover img {
   color: var(--razzmatazz);
 }
 
+#opponent-move-icon {
+  left: -30%;
+  transform: rotate(-45deg) rotateY(180deg);
+}
+
+#player-move-icon {
+  right: -30%;
+  transform: rotate(45deg);
+}
+
+.move-icon {
+  position: absolute;
+  user-select: none;
+  -webkit-user-select: none;
+  bottom: 10%;
+  font-size: 2em;
+  border-radius: 50%;
+  border: 1px solid black;
+  padding: .5rem;
+  color: black;
+}
+
+.icon-rock {
+  background-color: #ccc;
+}
+
+.icon-paper{
+  background-color: beige;
+}
+
+.icon-scissors {
+  background-color: lightblue;
+}
+
+@media only screen and (max-width: 600px) {
+  .move-icon {
+    font-size: 1.3em;
+  }
+  #opponent-move-icon {
+    left: -50%;
+  }
+
+  #player-move-icon {
+    right: -50%;
+  }
+}

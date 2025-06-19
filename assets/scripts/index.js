@@ -58,19 +58,24 @@
 
 let playerScore = 0;
 let opponentScore = 0;
-const elementUserScore = document.querySelector('#player-score');
+const elementPlayerScore = document.querySelector('#player-score');
 const elementopponentScore = document.querySelector('#opponent-score');
 const choicesSection = document.querySelector('section#choices');
 const gameBtnChoices = document.querySelectorAll('button.choice-button');
 const playersSection = document.querySelector('section#players');
 const roundOutcomeCssClasses = ['round-win', 'round-lose', 'round-tie'];
-const JANKEN_MOVES_IMAGES_DIR = 'assets/media/img/moveImg'
-const playerMoveImage = document.querySelector('#player .move-image');
-const opponentMoveImage = document.querySelector('#opponent .move-image');
 const playerReactionIcon = document.querySelector('#player-reaction-icon');
 const opponentReactionIcon = document.querySelector('#opponent-reaction-icon');
+const playerMoveIcon = document.querySelector('#player-move-icon');
+const opponentMoveIcon = document.querySelector('#opponent-move-icon');
 
-const iconStatusClasses = [
+const moveIconStatusClasses = [
+  'icon-rock',
+  'icon-paper',
+  'icon-scissors',
+];
+
+const reactionIconStatusClasses = [
   'icon-win',
   'icon-tie',
   'icon-lose'
@@ -116,8 +121,10 @@ const gameStats = {
   }
 };
 
-const updateStats = function statsCurrentScoreAndWinPlayerOrOpponent(outcome) { // will get its value from global constant
+const updateStats = function statsCurrentScoreAndWinPlayerOrOpponent(outcome, surrendered = false) { // will get its value from global constant
   gameStats.scores.push({playerScore, opponentScore});
+
+  if (surrendered) return;
 
   switch (outcome) {
     case 'WIN':
@@ -126,6 +133,10 @@ const updateStats = function statsCurrentScoreAndWinPlayerOrOpponent(outcome) { 
     case 'LOSE':
       gameStats.wins.opponent++;
       break;
+    case 'TIE':
+      break;
+    default:
+      throw new Error(`Unexpected Round Outcome: ${outcome}`);
   }
 }
 
@@ -135,9 +146,14 @@ const removeClasses = function removeMultipleClassesFromElement([...classes], el
   });
 }
 
+const resetIconsClasses = () => {
+  removeClasses(reactionIconStatusClasses, playerReactionIcon);
+  removeClasses(reactionIconStatusClasses, opponentReactionIcon);
+  removeClasses(moveIconStatusClasses, playerMoveIcon);
+  removeClasses(moveIconStatusClasses, opponentMoveIcon);
+}
+
 const setEmojisClasses = function setPlayersEmojiClassesBasedOnOutcome(outcome) {
-  removeClasses(iconStatusClasses, playerReactionIcon);
-  removeClasses(iconStatusClasses, opponentReactionIcon);
 
   if (outcome === 'WIN') {
     playerReactionIcon.classList.add('icon-win');
@@ -151,36 +167,50 @@ const setEmojisClasses = function setPlayersEmojiClassesBasedOnOutcome(outcome) 
   }
 }
 
-const setRandomEmoji = function setRandomEmojiAsTextContent(block, emojiArray) {
-  block.textContent = emojiArray[Math.floor(Math.random() * emojiArray.length)];
+const setRandomEmoji = function setRandomEmojiAsTextContent(element, [...emojiArray]) {
+  element.textContent = emojiArray[Math.floor(Math.random() * emojiArray.length)];
 }
 
-const updateEmoji = function getEachPlayersOutcomeAndSetTextContentOfEmojiBlock (playerOutcome) {
+const updateReactionIcons = function setRectionEmojiAndUpdateClass(playerOutcome) {
   if (playerOutcome === 'WIN') {
-    setRandomEmoji(playerReactionIcon, winReactionEmojis);
-    setRandomEmoji(opponentReactionIcon, loseReactionEmojis);
+    setRandomEmoji(playerReactionIcon.querySelector('span'), winReactionEmojis);
+    setRandomEmoji(opponentReactionIcon.querySelector('span'), loseReactionEmojis);
   } else if (playerOutcome === 'TIE') {
-    setRandomEmoji(playerReactionIcon, tieReactionEmojis);
-    setRandomEmoji(opponentReactionIcon, tieReactionEmojis);
+    setRandomEmoji(playerReactionIcon.querySelector('span'), tieReactionEmojis);
+    setRandomEmoji(opponentReactionIcon.querySelector('span'), tieReactionEmojis);
   } else if (playerOutcome === 'LOSE') {
-    setRandomEmoji(playerReactionIcon, loseReactionEmojis);
-    setRandomEmoji(opponentReactionIcon, winReactionEmojis);
+    setRandomEmoji(playerReactionIcon.querySelector('span'), loseReactionEmojis);
+    setRandomEmoji(opponentReactionIcon.querySelector('span'), winReactionEmojis);
   } else {
     throw new Error(`Unexpected Player Outcome: ${playerOutcome}`);
   }
+
   setEmojisClasses(playerOutcome);
 }
 
-const setDefaultImg = function setDefaultPlyaerAndOpponentReactionAndMoveImg() {
-  playerMoveImage.removeAttribute('src');
-  opponentMoveImage.removeAttribute('src');
+const setMoveIconClass = function resetPreviousClassesAndSetNewClass(move, playerElement) {
+  if (move === 'ROCK') return playerElement.classList.add('icon-rock');
+  if (move === 'SCISSORS') return playerElement.classList.add('icon-scissors');
+  if (move === 'PAPER') return playerElement.classList.add('icon-paper');
 }
 
-const setMoveImg = function setPlayerAndOpponentMoveImgs(movePlayer, moveOpponent) {
-  movePlayer = movePlayer.toLowerCase();
-  moveOpponent = moveOpponent.toLowerCase();
-  playerMoveImage.setAttribute('src', `${JANKEN_MOVES_IMAGES_DIR}/${movePlayer}.jpg`);
-  opponentMoveImage.setAttribute('src', `${JANKEN_MOVES_IMAGES_DIR}/${moveOpponent}.jpg`);
+const getMoveIcon = function getMoveIconBasedOnMove(move, icon) {
+  if (move === 'ROCK') return '';
+  if (move === 'SCISSORS') return '';
+  if (move === 'PAPER') return '';
+}
+
+const updateMoveIcons = function updateMoveIconsAndTheirClasses(playerMove, opponentMove) {
+  playerMoveIcon.querySelector('span').textContent = getMoveIcon(playerMove);
+  opponentMoveIcon.querySelector('span').textContent = getMoveIcon(opponentMove);
+  setMoveIconClass(playerMove, playerMoveIcon);
+  setMoveIconClass(opponentMove, opponentMoveIcon);
+}
+
+const updateEmojis = function updateReactionAndMoveIcons (playerOutcome, playerChoice, opponentChoice) {
+  resetIconsClasses();
+  updateReactionIcons(playerOutcome);
+  updateMoveIcons(playerChoice, opponentChoice);
 }
 
 const getScoreNumKanji = function getKanjiBasedOnNumberUpToFive(number) {
@@ -282,14 +312,14 @@ const renderScore = function incrementScoreUpdateUI(outcome) {
        throw new Error(`Unexpected outcome: ${outcome}`);
   }
 
-  elementUserScore.textContent = getScoreNumKanji(playerScore);
+  elementPlayerScore.textContent = getScoreNumKanji(playerScore);
   elementopponentScore.textContent = getScoreNumKanji(opponentScore);
 }
 
-const determineOutcome = function returnOutcomeOfTheRound(userChoice, opponentChoice) {
+const determineOutcome = function returnOutcomeOfTheRound(playerChoice, opponentChoice) {
   let outcome;
 
-  switch (userChoice) {
+  switch (playerChoice) {
     case 'ROCK':
       outcome = rock(opponentChoice);
       break;
@@ -300,20 +330,19 @@ const determineOutcome = function returnOutcomeOfTheRound(userChoice, opponentCh
       outcome = scissors(opponentChoice);
       break;
     default:
-       throw new Error(`Unexpected user choice: ${userChoice}`)  ;
+       throw new Error(`Unexpected player choice: ${playerChoice}`)  ;
   }
 
   return outcome;
 }
 
-const round = function playersChoices(userChoice) {
+const round = function playersChoices(playerChoice) {
   const randomThree = Math.floor(Math.random() * 3);
   const opponentChoice = getStringOpponentChoice(randomThree);
-  const outcome = determineOutcome(userChoice, opponentChoice);
+  const outcome = determineOutcome(playerChoice, opponentChoice);
   renderScore(outcome);
-  setMoveImg(userChoice, opponentChoice);
-  updateEmoji(outcome);
-  console.log(`あなた: ${userChoice} | 相手: ${opponentChoice} => ${outcome}`);
+  updateEmojis(outcome, playerChoice, opponentChoice);
+  console.log(`あなた: ${playerChoice} | 相手: ${opponentChoice} => ${outcome}`);
   return outcome;
 };
 
@@ -383,32 +412,36 @@ const createDisplayGameOver = function createGameOverSectionWithGameResultAsClas
 }
 
 const gameOver = function removeScoresColorDisplayGameOutcome(surrendered, outcome) {
-  updateStats(outcome);
+  updateStats(outcome, surrendered);
   const restartButton = createDisplayGameOver(surrendered);
   const restartGame = function restartOnClick() { restart(choicesSection)};
   restartButton.addEventListener('click', restartGame);
   playersSection.classList.remove(...roundOutcomeCssClasses);
 }
 
-const removeReactionEmojis = function removeReactionEmojiClassAndEmptyTextContent() {
+const resetPlayersIcons = function resetReactionAndMoveIcons() {
+  playerMoveIcon.textContent = '';
+  playerMoveIcon.classList.remove('move-icon');
+  opponentMoveIcon.textContent = '';
+  opponentMoveIcon.classList.remove('move-icon');
   playerReactionIcon.textContent = '';
   playerReactionIcon.classList.remove('reaction-icon');
   opponentReactionIcon.textContent = '';
   opponentReactionIcon.classList.remove('reaction-icon');
+  
 }
 
 const resetNodes = function showButtonsAgainAndResultGameResult(node) {
   node.classList.remove('hidden');
   const resultSection = document.querySelector('section#game-result');
-  setDefaultImg();
   if (resultSection) resultSection.remove();
-  removeReactionEmojis();
+  resetPlayersIcons()
 }
 
 const resetScores = function setScoresToZeroAndUpdateUIScores() {
   playerScore = 0;
   opponentScore = 0;
-  elementUserScore.textContent = getScoreNumKanji(0);
+  elementPlayerScore.textContent = getScoreNumKanji(0);
   elementopponentScore.textContent = getScoreNumKanji(0);
 }
 
@@ -419,28 +452,40 @@ const restart = function resetVariablesRecreateNodeRestartGame(node) {
   // make restart a new custom event
 }
 
-const game = function playGameUntilOneReachesMaxScore(userChoice, maxScore) {
-  if (userChoice === 'SURRENDER') return gameOver(true);
+const game = function playGameUntilOneReachesMaxScore(playerChoice, maxScore) {
+  if (playerChoice === 'SURRENDER') return gameOver(true);
 
-  const roundOutcome = round(userChoice);
+  const roundOutcome = round(playerChoice);
 
   if (playerScore >= maxScore || opponentScore >= maxScore) gameOver(false, roundOutcome);
 }
 
-setDefaultImg();
-
-const reactionIconClassAdd = function addReactionClassForPlayerAndOpponent() {
+const addPlayerIconsClasses = function addReactionClassForPlayerAndOpponent() {
   playerReactionIcon.classList.add('reaction-icon');
   opponentReactionIcon.classList.add('reaction-icon');
+  playerMoveIcon.classList.add('move-icon');
+  opponentMoveIcon.classList.add('move-icon');
+}
+
+const addSpan = function addSpanIfDoesntExist(element) {
+  if (!element.querySelector('span')) element.appendChild(document.createElement('span'));
+}
+
+const addPlayerIconSpans = function addSpansToPlayersReactionAndMoveIconElement() {
+  addSpan(playerReactionIcon);
+  addSpan(opponentReactionIcon);
+  addSpan(playerMoveIcon);
+  addSpan(opponentMoveIcon);
 }
 
 gameBtnChoices.forEach(choiceButton => {
   choiceButton.addEventListener('click', () => {
-    // Button ID name is directly interpreted as user input
-    // since it's not up to the user anyway
+    // Button ID name is directly interpreted as player input
+    // since it's not up to the player anyway
     const thisBtnID = choiceButton.getAttribute('id');
     const uppercaseBtnID = thisBtnID.toUpperCase();
-    reactionIconClassAdd();
+    addPlayerIconsClasses();
+    addPlayerIconSpans();
     game(uppercaseBtnID, 5);
   });
 });

@@ -8,19 +8,42 @@
   src: url('../fonts/Ultra-Regular.ttf');
 }
 
+@font-face {
+  font-family: 'Rock n Roll One';
+  src: url('../fonts/RocknRollOne-Regular.ttf');
+}
+
+@font-face {
+  font-family: 'Nerd Font Icon';
+  src: url('../fonts/NerdFontsSymbolsOnly/SymbolsNerdFont-Regular.ttf');
+}
+
 :root {
   --old-paper-color: #B99566;
   --dark-old-paper-color: #8C714D;
   --pastel-pink-color: #FFD1DC;
+  /* color-palette */
+  --fluorescent-cyan: #34F6F2FF;
+  --alice-blue: #EEF8FFFF;
+  --jet: #2A2B2AFF;
+  --aureolin: #F9E900FF;
+  --atomic-tangerine: #FF934FFF;
+  --true-blue: #3066BE;
+  --yellow-green: #9BC53D;
 }
 
 :root,
 body {
   margin: 0;
   font-size: 1.5rem;
+  color: var(--jet);
 }
 
 * {
+  font-family: 'Rock n Roll One', 'Ultra', sans-serif;
+}
+
+.gothic-font {
   font-family: 'Dela Gothic', 'Ultra', sans-serif;
 }
 
@@ -163,18 +186,6 @@ section#game-result h3 {
   display: none !important;
 }
 
-.round-win {
-  background-color: #AAFF99;
-}
-
-.round-lose {
-  background-color: #FF9999;
-}
-
-.round-tie {
-  background-color: #FFEE99;
-}
-
 .game-won h3 {
   color: darkgreen;
 }
@@ -226,8 +237,15 @@ nav {
   gap: 1rem;
   position: fixed;
   width: 100%;
-  box-shadow: 0 4px 2px 0px lightgreen;
-  background-color: #f0fff0;
+  box-shadow: 0 0 .3rem 0 var(--jet);
+  background-color: var(--yellow-green);
+}
+
+div#github-profile-image {
+  border-radius: 50%;
+  overflow: hidden;
+  border: 1px solid black;
+  height: 80%;
 }
 
 div#home-logo,
@@ -279,6 +297,9 @@ div#home-logo::before {
 
 div#github-profile-image::before {
   content: 'ギット';
+  width: 140%;
+  text-align: center;
+  font-size: .9em;
 }
 
 div#home-logo:hover::before,
@@ -288,7 +309,6 @@ div#github-profile-image:hover::before {
 
 div#home-logo,
 div#home-logo a,
-div#github-profile-image,
 div#github-profile-image a,
 div#home-logo img,
 div#home-logo a img,
@@ -338,4 +358,8 @@ div#github-profile-image:hover img {
   display: flex;
   flex-direction: column;
   gap: .33em;
+}
+
+.icons-font {
+  font-family: 'Nerd Font Icon';
 }

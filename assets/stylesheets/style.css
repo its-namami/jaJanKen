@@ -43,6 +43,10 @@ body {
   color: var(--jet);
 }
 
+main {
+  padding-bottom: 3rem;
+}
+
 * {
   font-family: 'Rock n Roll One', 'Ultra', sans-serif;
 }
@@ -452,4 +456,17 @@ div#github-profile-image:hover img {
   #player-move-icon {
     right: -50%;
   }
+}
+
+#game-result button {
+  padding: .5rem 1rem;
+  background-color: var(--aureolin);
+  transition: background-color 0.2s;
+  border-radius: .5rem;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+#game-result button:hover {
+  background-color: var(--atomic-tangerine);
 }
